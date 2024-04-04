@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Algoritmer;
-using uge_14_algoritmer;
 
-namespace MainProgram
+
+namespace Algoritmer
 {
     class Program
     {
