@@ -12,7 +12,35 @@ namespace MainProgram
             string dataFileName = "students.txt";
             DataHandler dataHandler = new DataHandler(dataFileName);
 
-            Console.WriteLine("Vælg sortering:");
+            // Hovedmenu
+            Console.WriteLine("Hovedmenu:");
+            Console.WriteLine("1. Sortering");
+            Console.WriteLine("2. Søgning");
+            Console.Write("Indtast dit valg: ");
+
+            int mainChoice;
+            while (!int.TryParse(Console.ReadLine(), out mainChoice) || mainChoice < 1 || mainChoice > 2)
+            {
+                Console.WriteLine("Ugyldigt valg. Prøv igen.");
+            }
+
+            switch (mainChoice)
+            {
+                case 1:
+                    SortingMenu(dataHandler);
+                    break;
+                case 2:
+                    SearchMenu(dataHandler);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Metode til sortering menu
+        static void SortingMenu(DataHandler dataHandler)
+        {
+            Console.WriteLine("Sortering:");
             Console.WriteLine("1. Sorter efter Group Number");
             Console.WriteLine("2. Sorter efter Navn");
             Console.Write("Indtast dit valg: ");
@@ -28,32 +56,12 @@ namespace MainProgram
             switch (sortingChoice)
             {
                 case 1:
-                    // Sorter efter Group Number (Selection Sort)
                     SortingAlgos.SelectionSort(students);
                     break;
                 case 2:
-                    // Vælg sorteringsmetode for navne
-                    Console.WriteLine("Vælg sorteringsmetode for navne:");
-                    Console.WriteLine("1. Bubble Sort");
-                    Console.WriteLine("2. Quick Sort");
-                    Console.Write("Indtast dit valg: ");
-
-                    int nameSortingChoice;
-                    while (!int.TryParse(Console.ReadLine(), out nameSortingChoice) || nameSortingChoice < 1 || nameSortingChoice > 2)
-                    {
-                        Console.WriteLine("Ugyldigt valg. Prøv igen.");
-                    }
-
-                    if (nameSortingChoice == 1)
-                    {
-                        // Sorter efter Navn (Bubble Sort)
-                        SortingAlgos.bubbleSort(students);
-                    }
-                    else
-                    {
-                        // Sorter efter Navn (Quick Sort)
-                        SortingAlgos.QuickSort(students, 0, students.Count - 1);
-                    }
+                    SortingAlgos.QuickSort(students, 0, students.Count - 1);
+                    break;
+                default:
                     break;
             }
 
@@ -66,6 +74,58 @@ namespace MainProgram
 
             // Gem sorteret data til filen
             dataHandler.SaveStudents(students);
+        }
+
+        // Metode til søgning menu
+        static void SearchMenu(DataHandler dataHandler)
+        {
+            Console.WriteLine("Søgning:");
+            Console.WriteLine("1. Linear søgning");
+            Console.WriteLine("2. Binær søgning");
+            Console.Write("Indtast dit valg: ");
+
+            int searchChoice;
+            while (!int.TryParse(Console.ReadLine(), out searchChoice) || searchChoice < 1 || searchChoice > 2)
+            {
+                Console.WriteLine("Ugyldigt valg. Prøv igen.");
+            }
+
+            List<Student> students = dataHandler.LoadStudents();
+
+            switch (searchChoice)
+            {
+                case 1:
+                    Console.Write("Indtast fulde navn for at søge: ");
+                    string fullNameLinear = Console.ReadLine();
+                    var resultLinear = SearchAlgorithms.LinearSearch(students, fullNameLinear);
+                    if (resultLinear != null)
+                    {
+                        Console.WriteLine($"Studerende fundet: {resultLinear.FullName} - Gruppe {resultLinear.GroupNumber}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Studerende ikke fundet.");
+                    }
+                    break;
+                case 2:
+                    // Før binær søgning skal listen være sorteret efter navn
+                    SortingAlgos.QuickSort(students, 0, students.Count - 1);
+
+                    Console.Write("Indtast fulde navn for at søge: ");
+                    string fullNameBinary = Console.ReadLine();
+                    var resultBinary = SearchAlgorithms.BinarySearch(students, fullNameBinary);
+                    if (resultBinary != null)
+                    {
+                        Console.WriteLine($"Studerende fundet: {resultBinary.FullName} - Gruppe {resultBinary.GroupNumber}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Studerende ikke fundet.");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
