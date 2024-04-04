@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using Algoritmer;
 
-namespace uge_14_algoritmer
+namespace Algoritmer
 {
     public class DataHandler
     {
